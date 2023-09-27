@@ -17,6 +17,11 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ url('') }}/css/file.css" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
     <!-- Custom styles for this template -->
     <link href="./Pricing example for Bootstrap_files/pricing.css" rel="stylesheet">
     <style type="text/css">
@@ -272,13 +277,13 @@
 <body style="">
 
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Uncle B Farm Store</h5>
+        <h5 class="my-0 mr-md-auto font-weight-normal" href="/welcome" >Uncle B Farm Feeds</h5>
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="/">Home</a>
             <a class="p-2 text-dark" href="/item">Stocks</a>
-
+            <a class="p-2 text-dark" href="/formula">Formular</a>
         </nav>
-        <a class="btn btn-outline-primary" href="history">history</a>
+        <a class="btn btn-outline-primary" href="history">History</a>
     </div>
 
 
@@ -452,7 +457,7 @@
 
                 </div>
 
-            
+
 
                 <div class="form-row">
                     <div class="col-md-1 mb-3">
