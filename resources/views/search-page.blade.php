@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="https://getbootstrap.com/docs/4.1/assets/img/favicons/favicon.ico">
 
-    <title>Pricing example for Bootstrap</title>
+    <title>UNCLE B FARM</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/pricing/">
 
@@ -23,7 +23,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="./Pricing example for Bootstrap_files/pricing.css" rel="stylesheet">
+    <link href="./UNCLE B FARM_files/pricing.css" rel="stylesheet">
     <style type="text/css">
         @charset "UTF-8";
 
