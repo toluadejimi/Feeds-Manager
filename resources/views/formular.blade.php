@@ -505,6 +505,42 @@
 
                 </div>
 
+                <div class="form-row">
+                    <div class="col-md-1 mb-3">
+                        <p>Enzyme</p>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <input type="number" class="form-control" step="any" name="enzyme" value="{{ $formation->enzyme }}"
+                            </div>
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+                    <div class="col-md-1 mb-3">
+                        <p>T Binder</p>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <input type="number" class="form-control" step="any" name="tbinder" value="{{ $formation->tbinder }}"
+                            </div>
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+                    <div class="col-md-1 mb-3">
+                        <p>Chick prmix</p>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <input type="number" class="form-control" step="any" name="ckprmix" value="{{ $formation->ckprmix }}"
+                            </div>
+                    </div>
+
+                </div>
+
+
 
                 <div class="form-row">
                     <div class="col-md-1 mb-3">
@@ -519,10 +555,17 @@
                 </div>
 
 
+             
+
+
+                
+
+
                 <input type="text" hidden name="fm_code" value="{{ $fm_code }}">
 
 
                 <button type="submit" class="btn btn-primary">Save Formation</button>
+
 
 
             </form>
