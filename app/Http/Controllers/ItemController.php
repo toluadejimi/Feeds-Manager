@@ -776,8 +776,6 @@ class ItemController extends Controller
             return back()->with('message', "1 Ton of Layer's Mash Restock successful");
         }
 
-
-
         return back()->with('error', "No formation present");
     }
 

@@ -525,7 +525,6 @@
                 <button type="submit" class="btn btn-primary">Save Formation</button>
 
 
-
             </form>
 
             @endif
