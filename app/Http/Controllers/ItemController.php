@@ -780,6 +780,8 @@ class ItemController extends Controller
             $trx->balance = $balance;
             $trx->save();
 
+            
+
             $balance = Item::where('id', 9)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = $cm->lprmix;
