@@ -25,6 +25,9 @@ Route::get('item',  [ItemController::class,'item']);
 
 
 Route::post('login',  [ItemController::class,'login']);
+
+
+
 Route::get('log-out',  [ItemController::class,'logout']);
 
 Route::post('register',  [ItemController::class,'register']);

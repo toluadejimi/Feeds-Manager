@@ -96,7 +96,7 @@ class ItemController extends Controller
 
 
 
-            return view('welcome', compact('output', 'user', 'gmesh', 'pl', 'cmesh', 'lmesh', 'bs', 'bf'));
+            return redirect('welcome');
 
         }
 
