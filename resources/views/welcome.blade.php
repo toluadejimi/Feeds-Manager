@@ -291,14 +291,17 @@
 <body style="">
 
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal" href="/welcome" >Uncle B Farm Feeds  | Welcome {{ Auth::user()->fullname ?? "User"  }}</h5>
+        <h5 class="my-0 mr-md-auto font-weight-normal" href="/welcome" >Uncle B Farm Feeds |  <small class="text-muted"> Welcome {{ Auth::user()->fullname ?? "User"  }}</small> </h5>
         <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="/">Home</a>
+        <a class="p-2 text-dark" href="/">Home</a>
+            @if($user == 1 )
             <a class="p-2 text-dark" href="/item">Stocks</a>
-            <a class="p-2 text-dark" href="/formula">Formular</a>
             <a class="p-2 text-dark" href="/history">History</a>
-
+            <a class="p-2 text-dark" href="/formula">Formular</a>
+            @endif
         </nav>
+
+
         @if($user == null)
         <button type="button" data-toggle="modal" data-target="#login"
         class="btn btn-outline-primary">Login</button>
@@ -443,6 +446,7 @@
 
 
 
+
         @foreach($output->chunk(3) as $items)
         <div class="row center">
             @foreach($items as $item)
@@ -470,15 +474,40 @@
 
 
                 @else
+
+
+
+
                 <div class="my-3">
+
+
+
+
+
+                    @if($user == 2)
                     <button type="submit" data-toggle="modal" data-target="#issue{{ $item->id }}"
-                        class="btn btn-primary btn-md mt-2">Issue Out Stock
+                        class="btn btn-primary btn-md mt-2">Receive Stock
+                    </button>
+                    @elseif($user == 3)
+                    <button type="button" data-toggle="modal" data-target="#restock{{ $item->id }}"
+                        class="btn btn-secondary btn-md mt-2">Produce Stock
                     </button>
 
+                    @elseif($user == 1)
+                    <button type="submit" data-toggle="modal" data-target="#issue{{ $item->id }}"
+                        class="btn btn-primary btn-md mt-2">Receive Stock
+                    </button>
 
                     <button type="button" data-toggle="modal" data-target="#restock{{ $item->id }}"
-                        class="btn btn-secondary btn-md mt-2">Restock
+                        class="btn btn-secondary btn-md mt-2">Produce Stock
                     </button>
+                    @else
+
+                    <button type="button" data-toggle="modal" data-target="#login"
+                    class="btn btn-outline-primary">Please Login to continue</button>
+
+
+                    @endif
 
                 </div>
                 @endif

@@ -34,7 +34,7 @@ class ItemController extends Controller
         $bf = Output::where('id', 5)->first()->qty;
         $pl = Output::where('id', 6)->first()->qty;
 
-        $user = Auth::id() ?? null;
+        $user = Auth::user()->role ?? null;
 
 
 
@@ -285,6 +285,7 @@ class ItemController extends Controller
             $trx->type = 'credit';
             $trx->issued_qty = 1;
             $trx->balance = $balance;
+            $trx->user_id = Auth::id();
             $trx->save();
 
 
