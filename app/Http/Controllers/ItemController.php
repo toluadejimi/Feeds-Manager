@@ -94,9 +94,7 @@ class ItemController extends Controller
 
             $user = Auth::user()->role ?? null;
 
-
-
-            return redirect('welcome');
+            return redirect('/');
 
         }
 
