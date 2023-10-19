@@ -57,7 +57,7 @@ class ItemController extends Controller
 
         // Create a new user
         $user = User::create([
-            'username' => $validatedData['fullname'],
+            'fullname' => $validatedData['fullname'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
         ]);
