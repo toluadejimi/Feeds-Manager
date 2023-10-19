@@ -17,6 +17,14 @@
     <!-- Bootstrap core CSS -->
 
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous">
+</script>
+
+
  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
@@ -288,8 +296,122 @@
             <a class="p-2 text-dark" href="/">Home</a>
             <a class="p-2 text-dark" href="/item">Stocks</a>
             <a class="p-2 text-dark" href="/formula">Formular</a>
+            <a class="p-2 text-dark" href="/history">History</a>
+
         </nav>
-        <a class="btn btn-outline-primary" href="history">History</a>
+        @if($user == null)
+        <button type="button" data-toggle="modal" data-target="#login"
+        class="btn btn-outline-primary">Login</button>
+        <button type="button" data-toggle="modal" data-target="#register" class="btn btn-dark">
+            <ion-icon name="person-add-outline"></ion-icon> Register
+        </button>
+        @else
+        <li> <a href="/log-out" class="btn btn-dark">
+            <ion-icon name="log-out-outline"></ion-icon> Log Out
+        </a></li>
+        @endif
+
+
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+
+                    <h2>Login</h2>
+                    <form action="/login" method="POST">
+                        @csrf
+
+                        <div class="my-2">
+                            <label>Username</label>
+                            <input class="form-control" name="email" required type="text" autofocus
+                                placeholder="Enter your Email">
+                        </div>
+
+                        <div class="my-2">
+                            <label>Password</label>
+                            <input class="form-control" name="password" required type="password" autofocus
+                                placeholder="Enter your password">
+                        </div>
+
+
+
+                        <a href="/forgot-password" class="mt-3 mb-3 text-dark">Forgot password</a>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Login</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+
+
+                    </form>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <h5>Register</h5>
+
+                    <form action="/register" method="POST">
+                        @csrf
+
+                        <div class="my-2">
+                            <label>Full Name</label>
+                            <input class="form-control" name="fullname" required type="text" autofocus
+                                placeholder="Enter your Fullname">
+                        </div>
+
+                        <div class="my-2">
+                            <label>Email</label>
+                            <input class="form-control" name="email" required type="text" autofocus
+                                placeholder="Enter your Email Address">
+                        </div>
+
+                        <div class="my-2">
+                            <label>Password</label>
+                            <input class="form-control" name="password" required type="text" autofocus
+                                placeholder="Enter your Password">
+                        </div>
+
+                        <div class="my-2">
+                            <label>Confirm Password</label>
+                            <input class="form-control" name="password_confirmation" required type="text" autofocus
+                                placeholder="Confirm your Password">
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Register</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+        </div>
     </div>
 
 
@@ -331,7 +453,7 @@
                 <div class="card-body">
                     <h2 class="card-title pricing-card-title"><small class="">{{ $item->name }}</small></h2>
                     <h1 class="card-title pricing-card-title"><small class=""></small>{{number_format($item->qty, 1) }}
-                        Tons</h1>
+                        Bags</h1>
                 </div>
 
                     @if($item->qty == 0)
@@ -433,7 +555,7 @@
                                     <div class="my-4">
 
                                         <label>Item</label>
-                                        <h3>{{ "Chick's Mash" }} - {{ $cmesh }} Tons</h3>
+                                        <h3>{{ "Chick's Mash" }} - {{ $cmesh }} Bags</h3>
                                         <input type="number" hidden name="item" value="1" class="form-control">
 
 
@@ -481,7 +603,7 @@
                                     <div class="my-4">
 
                                         <label>Item</label>
-                                        <h3>{{ "Grower's Mash" }} - {{ $gmesh }} Tons</h3>
+                                        <h3>{{ "Grower's Mash" }} - {{ $gmesh }} Bags</h3>
                                         <input type="number" hidden name="item" value="2" class="form-control">
 
 
@@ -529,7 +651,7 @@
                                     <div class="my-4">
 
                                         <label>Item</label>
-                                        <h3>{{ "Layer's Mash" }} - {{ $lmesh }} Tons</h3>
+                                        <h3>{{ "Layer's Mash" }} - {{ $lmesh }} Bags</h3>
                                         <input type="number"  hidden name="item" value="3" class="form-control">
 
 
@@ -577,7 +699,7 @@
                                     <div class="my-4">
 
                                         <label>Item</label>
-                                        <h3>{{ "Broiler's Stater" }} - {{ $bs }} Tons</h3>
+                                        <h3>{{ "Broiler's Stater" }} - {{ $bs }} Bags</h3>
                                         <input type="number" hidden name="item" value="4" class="form-control">
 
 
@@ -625,7 +747,7 @@
                                     <div class="my-4">
 
                                         <label>Item</label>
-                                        <h3>{{ "Broiler's Finisher" }} - {{ $bf }} Tons</h3>
+                                        <h3>{{ "Broiler's Finisher" }} - {{ $bf }} Bags</h3>
                                         <input type="number" hidden name="item" value="5" class="form-control">
 
 
@@ -674,7 +796,7 @@
                                     <div class="my-4">
 
                                         <label>Item</label>
-                                        <h3>{{ "Pre Layer's Mesh" }} - {{ $pl }} Tons</h3>
+                                        <h3>{{ "Pre Layer's Mesh" }} - {{ $pl }} Bags</h3>
                                         <input type="number" hidden name="item" value="6" class="form-control">
 
 
@@ -726,7 +848,7 @@
                                     <div class="my-4">
 
                                         <label>Item</label>
-                                        <h3>{{ "Chick's Mash" }} - {{ $cmesh }} Tons</h3>
+                                        <h3>{{ "Chick's Mash" }} - {{ $cmesh }} Bags</h3>
                                         <input type="number" hidden name="item" value="1" class="form-control">
 
 
@@ -735,12 +857,12 @@
 
                                     <div class="my-4">
 
-                                        <label>Choose Quantity in Tons</label>
+                                        <label>Choose Quantity in Bags</label>
                                         <select name="tons" required class="form-control">
-                                            <option>Select Tons</option>
-                                            <option value="1">1 Ton</option>
-                                            <option value="2">1.5 Tons</option>
-                                            <option value="3">2 Tons</option>
+                                            <option>Select Bags</option>
+                                            <option value="1">40 Bags</option>
+                                            <option value="2">65 Bags</option>
+                                            <option value="3">80 Bags</option>
 
 
                                         </select>
@@ -785,7 +907,7 @@
 
                                     <div class="my-4">
                                         <label>Item</label>
-                                        <h3>{{ "Grower's Mash" }} - {{ $gmesh }} Tons</h3>
+                                        <h3>{{ "Grower's Mash" }} - {{ $gmesh }} Bags</h3>
                                         <input type="number" hidden name="item" value="2" class="form-control">
 
 
@@ -794,12 +916,12 @@
 
                                     <div class="my-4">
 
-                                        <label>Choose Quantity in Tons</label>
+                                        <label>Choose Quantity in Bags</label>
                                         <select name="tons" required class="form-control">
-                                            <option>Select Tons</option>
-                                            <option value="1">1 Ton</option>
-                                            <option value="2">1.5 Tons</option>
-                                            <option value="3">2 Tons</option>
+                                            <option>Select Bags</option>
+                                            <option value="1">40 Bag</option>
+                                            <option value="2">65 Bags</option>
+                                            <option value="3">80 Bags</option>
 
 
                                         </select>
@@ -844,19 +966,19 @@
 
                                     <div class="my-4">
                                         <label>Item</label>
-                                        <h3>{{ "Layer's Mash" }} - {{ $lmesh }} Tons</h3>
+                                        <h3>{{ "Layer's Mash" }} - {{ $lmesh }} Bags</h3>
                                         <input type="number" hidden name="item" value="3" class="form-control">
                                     </div>
 
 
                                     <div class="my-4">
 
-                                        <label>Choose Quantity in Tons</label>
+                                        <label>Choose Quantity in Bags</label>
                                         <select name="tons" required class="form-control">
-                                            <option>Select Tons</option>
-                                            <option value="1">1 Ton</option>
-                                            <option value="2">1.5 Tons</option>
-                                            <option value="3">2 Tons</option>
+                                            <option>Select Bags</option>
+                                            <option value="1">40 Bag</option>
+                                            <option value="2">65 Bags</option>
+                                            <option value="3">80 Bags</option>
 
 
                                         </select>
@@ -901,19 +1023,19 @@
 
                                     <div class="my-4">
                                         <label>Item</label>
-                                        <h3>{{ "Broiler's Stater" }} - {{ $bs }} Tons</h3>
+                                        <h3>{{ "Broiler's Stater" }} - {{ $bs }} Bags</h3>
                                         <input type="number" hidden name="item" value="4" class="form-control">
                                     </div>
 
 
                                     <div class="my-4">
 
-                                        <label>Choose Quantity in Tons</label>
+                                        <label>Choose Quantity in Bags</label>
                                         <select name="tons" required class="form-control">
-                                            <option>Select Tons</option>
-                                            <option value="1">1 Ton</option>
-                                            <option value="2">1.5 Tons</option>
-                                            <option value="3">2 Tons</option>
+                                            <option>Select Bags</option>
+                                            <option value="1">40 Bags</option>
+                                            <option value="2">65 Bags</option>
+                                            <option value="3">80 Bags</option>
 
 
                                         </select>
@@ -958,19 +1080,19 @@
 
                                     <div class="my-4">
                                         <label>Item</label>
-                                        <h3>{{ "Broiler's Finisher" }} - {{ $bf }} Tons</h3>
+                                        <h3>{{ "Broiler's Finisher" }} - {{ $bf }} Bags</h3>
                                         <input type="number" hidden name="item" value="5" class="form-control">
                                     </div>
 
 
                                     <div class="my-4">
 
-                                        <label>Choose Quantity in Tons</label>
+                                        <label>Choose Quantity in Bags</label>
                                         <select name="tons" required class="form-control">
-                                            <option>Select Tons</option>
-                                            <option value="1">1 Ton</option>
-                                            <option value="2">1.5 Tons</option>
-                                            <option value="3">2 Tons</option>
+                                            <option>Select Bags</option>
+                                            <option value="1">40 Bag<s/option>
+                                            <option value="2">65 Bags</option>
+                                            <option value="3">2 Bags</option>
 
 
                                         </select>
@@ -1015,7 +1137,7 @@
 
                                     <div class="my-4">
                                         <label>Item</label>
-                                        <h3>{{ "Pre Layer's Mesh" }} - {{ $pl }} Tons</h3>
+                                        <h3>{{ "Pre Layer's Mesh" }} - {{ $pl }} Bags</h3>
                                         <input type="number" hidden name="item" value="6" class="form-control">
 
                                     </div>
@@ -1023,12 +1145,12 @@
 
                                     <div class="my-4">
 
-                                        <label>Choose Quantity in Tons</label>
+                                        <label>Choose Quantity in Bags</label>
                                         <select name="tons" required class="form-control">
-                                            <option>Select Tons</option>
-                                            <option value="1">1 Ton</option>
-                                            <option value="2">1.5 Tons</option>
-                                            <option value="3">2 Tons</option>
+                                            <option>Select Bags</option>
+                                            <option value="1">40 Bag</option>
+                                            <option value="2">65 Bags</option>
+                                            <option value="3">80 Bags</option>
 
 
                                         </select>

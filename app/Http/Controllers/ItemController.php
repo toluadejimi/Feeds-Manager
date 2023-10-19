@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BsFormation;
 use App\Models\CmFormation;
 use App\Models\Formation;
 use App\Models\GmFormation;
@@ -11,7 +12,10 @@ use App\Models\OnetoncmFormations;
 use App\Models\Output;
 use App\Models\OutputTransaction;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ItemController extends Controller
 {
@@ -30,12 +34,73 @@ class ItemController extends Controller
         $bf = Output::where('id', 5)->first()->qty;
         $pl = Output::where('id', 6)->first()->qty;
 
+        $user = Auth::id() ?? null;
 
 
 
 
 
-        return view('welcome', compact('output', 'gmesh', 'pl', 'cmesh', 'lmesh', 'bs', 'bf'));
+
+
+        return view('welcome', compact('output', 'user', 'gmesh', 'pl', 'cmesh', 'lmesh', 'bs', 'bf'));
+    }
+
+
+     public function register(Request $request)
+    {
+        // Validate the user input
+        $validatedData = $request->validate([
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:4|confirmed',
+        ]);
+
+        // Create a new user
+        $user = User::create([
+            'username' => $validatedData['fullname'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+        ]);
+
+        // Log in the user after registration (optional)
+        auth()->login($user);
+
+        // Redirect the user to a protected route or dashboard
+        return redirect('/');
+    }
+
+
+    public function logout(Request $request)
+    {
+
+        Auth::logout();
+        return redirect('/');
+    }
+
+     public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+
+
+            $output = Output::select('name',  'id', 'sn', 'qty')->get();
+            $gmesh = Output::where('id', 2)->first()->qty;
+            $cmesh = Output::where('id', 1)->first()->qty;
+            $lmesh = Output::where('id', 3)->first()->qty;
+            $bs = Output::where('id', 4)->first()->qty;
+            $bf = Output::where('id', 5)->first()->qty;
+            $pl = Output::where('id', 6)->first()->qty;
+
+            $user = Auth::user()->role ?? null;
+
+
+
+            return view('welcome', compact('output', 'user', 'gmesh', 'pl', 'cmesh', 'lmesh', 'bs', 'bf'));
+
+        }
+
+        return back()->with('error', "Email or Password Incorrect");
     }
 
 
@@ -214,7 +279,7 @@ class ItemController extends Controller
 
 
 
-            $output = Output::where('id', $final_item)->increment('qty', 1);
+            $output = Output::where('id', $final_item)->increment('qty', 40);
             $balance = Output::where('id', $final_item)->first()->qty;
 
             $trx = new OutputTransaction();
@@ -226,7 +291,7 @@ class ItemController extends Controller
 
 
 
-            return back()->with('message', "1 Ton of Growser's Mash Restock successful");
+            return back()->with('message', "40 bags of Growser's Mash Restock successful");
         }
 
          //Grower's Mesh Formation 1.5 TON
@@ -398,7 +463,7 @@ class ItemController extends Controller
 
 
 
-            $output = Output::where('id', $final_item)->increment('qty', 1.5);
+            $output = Output::where('id', $final_item)->increment('qty', 45);
             $balance = Output::where('id', $final_item)->first()->qty;
 
             $trx = new OutputTransaction();
@@ -410,7 +475,7 @@ class ItemController extends Controller
 
 
 
-            return back()->with('message', "1.5 Tons of Growser's Mash Restock successful");
+            return back()->with('message', "45 bags of Growser's Mash Restock successful");
         }
 
 
@@ -598,7 +663,7 @@ class ItemController extends Controller
 
 
 
-            $output = Output::where('id', $final_item)->increment('qty', 1);
+            $output = Output::where('id', $final_item)->increment('qty', 40);
             $balance = Output::where('id', $final_item)->first()->qty;
 
             $trx = new OutputTransaction();
@@ -610,7 +675,7 @@ class ItemController extends Controller
 
 
 
-            return back()->with('message', "1 Ton of Chick's Mash Restock successful");
+            return back()->with('message', "40 bags of Chick's Mash Restock successful");
         }
 
 
@@ -790,7 +855,7 @@ class ItemController extends Controller
 
 
 
-            $output = Output::where('id', $final_item)->increment('qty', 1);
+            $output = Output::where('id', $final_item)->increment('qty', 40);
             $balance = Output::where('id', $final_item)->first()->qty;
 
             $trx = new OutputTransaction();
@@ -800,279 +865,102 @@ class ItemController extends Controller
             $trx->balance = $balance;
             $trx->save();
 
-       
 
-            return back()->with('message', "1 Ton of Layer's Mash Restock successful");
+
+            return back()->with('message', "40 bags of Layer's Mash Restock successful");
         }
 
 
 
-        //Layer's Mesh Formation
 
+        //Broiler's Starter Formation 1 TON
+        if ($final_item == 4 && $ton == 1) {
 
-
-
-
-        // if ($final_item == 2 && $ton == 2) {
-
-        //     //Maize
-        //     $maize = Item::where('id', 1)->first()->qty;
-        //     if ($maize < 750) {
-        //         return back()->with('error', 'MAIZE is insufficient to produce Growers Mash');
-        //     }
-        //     $soya = Item::where('id', 2)->first()->qty;
-        //     if ($soya < 285) {
-        //         return back()->with('error', 'SOYA is insufficient to produce Growers Mash');
-        //     }
-
-        //     $weathofful = Item::where('id', 5)->first()->qty;
-        //     if ($weathofful < 340.5) {
-        //         return back()->with('error', 'WHEATOFFUL is insufficient to produce Growers Mash');
-        //     }
-
-        //     $bonemeal = Item::where('id', 3)->first()->qty;
-        //     if ($bonemeal < 37.5) {
-        //         return back()->with('error', 'BONE MEAL is insufficient to produce Growers Mash');
-        //     }
-
-        //     $limestone = Item::where('id', 4)->first()->qty;
-        //     if ($limestone < 75) {
-        //         return back()->with('error', 'LIME STONE is insufficient to produce Growers Mash');
-        //     }
-
-        //     $salt = Item::where('id', 12)->first()->qty;
-        //     if ($salt < 4.5) {
-        //         return back()->with('error', 'SALT is insufficient to produce Growers Mash');
-        //     }
-
-        //     $lysine = Item::where('id', 17)->first()->qty;
-        //     if ($lysine < 1.5) {
-        //         return back()->with('error', 'LYSINE is insufficient to produce Growers Mash');
-        //     }
-
-        //     $methionine = Item::where('id', 18)->first()->qty;
-        //     if ($methionine < 1.5) {
-        //         return back()->with('error', 'METHIONINE is insufficient to produce Growers Mash');
-        //     }
-
-        //     $fulzyme = Item::where('id', 19)->first()->qty;
-        //     if ($fulzyme < 0.45) {
-        //         return back()->with('error', 'FULZYME is insufficient to produce Growers Mash');
-        //     }
-
-        //     $zerotox = Item::where('id', 20)->first()->qty;
-        //     if ($zerotox < 0.45) {
-        //         return back()->with('error', 'ZEROTOX is insufficient to produce Growers Mash');
-        //     }
-
-        //     $gprmix = Item::where('id', 8)->first()->qty;
-        //     if ($gprmix < 3.75) {
-        //         return back()->with('error', "GROWER'S PREMIX is insufficient to produce Growers Mash");
-        //     }
-
-
-
-
-        //     //Deduction
-        //     $maize = Item::where('id', 1)->decrement('qty', 750);
-        //     $soya = Item::where('id', 2)->decrement('qty', 285);
-        //     $weathofful = Item::where('id', 5)->decrement('qty', 340.5);
-        //     $bonemeal = Item::where('id', 3)->decrement('qty', 37.5);
-        //     $limestone = Item::where('id', 4)->decrement('qty', 75);
-        //     $salt = Item::where('id', 12)->decrement('qty', 4.5);
-        //     $lysine = Item::where('id', 17)->decrement('qty', 1.5);
-        //     $methionine = Item::where('id', 18)->decrement('qty', 1.5);
-        //     $fulzyme = Item::where('id', 19)->decrement('qty', 0.45);
-        //     $zerotox = Item::where('id', 20)->decrement('qty', 0.45);
-        //     $gprmix = Item::where('id', 8)->decrement('qty', 3.75);
-
-
-        //     //history
-        //     $balance = Item::where('id', 1)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 1;
-        //     $trx->issued_qty = 750;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 2)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 2;
-        //     $trx->issued_qty = 285;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 5)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 5;
-        //     $trx->issued_qty = 340.5;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 3)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 3;
-        //     $trx->issued_qty = 37.5;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 4)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 4;
-        //     $trx->issued_qty = 75;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 12)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 12;
-        //     $trx->issued_qty = 4.5;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 17)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 17;
-        //     $trx->issued_qty = 1.5;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-
-        //     $balance = Item::where('id', 18)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 18;
-        //     $trx->issued_qty = 1.5;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 19)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 19;
-        //     $trx->type = 'debit';
-        //     $trx->issued_qty = 0.45;
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 20)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 20;
-        //     $trx->issued_qty = 0.45;
-        //     $trx->type = 'debit';
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-        //     $balance = Item::where('id', 8)->first()->qty;
-        //     $trx = new Transaction();
-        //     $trx->item_id = 8;
-        //     $trx->type = 'debit';
-        //     $trx->issued_qty = 3.45;
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-
-
-        //     $output = Output::where('id', $final_item)->increment('qty', 1.5);
-        //     $balance = Output::where('id', $final_item)->first()->qty;
-
-        //     $trx = new OutputTransaction();
-        //     $trx->item_id = $final_item;
-        //     $trx->type = 'credit';
-        //     $trx->issued_qty = 1.5;
-        //     $trx->balance = $balance;
-        //     $trx->save();
-
-
-
-        //     return back()->with('message', "1.5 Tons of Growser's Mash Restock successful");
-        // }
-
-        if ($final_item == 3 && $ton == 1) {
+            $cm = BsFormation::where('id', 1)->first();
 
             //Maize
             $maize = Item::where('id', 1)->first()->qty;
-            if ($maize < 580) {
-                return back()->with('error', 'MAIZE is insufficient to produce Layers Mash');
+            if ($maize < $cm->maize) {
+                return back()->with('error', 'MAIZE is insufficient to produce Broilers Stater');
             }
             $soya = Item::where('id', 2)->first()->qty;
-            if ($soya < 190) {
-                return back()->with('error', 'SOYA is insufficient to produce Layers Mash');
+            if ($soya < $cm->soya) {
+                return back()->with('error', 'SOYA is insufficient to produce Broilers Stater');
             }
 
             $weathofful = Item::where('id', 5)->first()->qty;
-            if ($weathofful < 93) {
-                return back()->with('error', 'WHEATOFFUL is insufficient to produce Layers Mash');
+            if ($weathofful < $cm->weathofful) {
+                return back()->with('error', 'WHEATOFFUL is insufficient to produce Broilers Stater');
             }
 
             $bonemeal = Item::where('id', 3)->first()->qty;
-            if ($bonemeal < 30) {
-                return back()->with('error', 'BONE MEAL is insufficient to produce Layers Mash');
+            if ($bonemeal < $cm->bonemeal) {
+                return back()->with('error', 'BONE MEAL is insufficient to produce Broilers Stater');
             }
 
             $limestone = Item::where('id', 4)->first()->qty;
-            if ($limestone < 96) {
-                return back()->with('error', 'LIME STONE is insufficient to produce Layers Mash');
-            }
-
-            $salt = Item::where('id', 12)->first()->qty;
-            if ($salt < 3) {
-                return back()->with('error', 'SALT is insufficient to produce Layers Mash');
+            if ($limestone < $cm->limestone) {
+                return back()->with('error', 'LIME STONE is insufficient to produce Broilers Stater');
             }
 
             $lysine = Item::where('id', 17)->first()->qty;
-            if ($lysine < 2) {
-                return back()->with('error', 'LYSINE is insufficient to produce Layers Mash');
+            if ($lysine < $cm->lysine) {
+                return back()->with('error', 'LYSINE is insufficient to produce Broilers Stater');
             }
+
 
             $methionine = Item::where('id', 18)->first()->qty;
-            if ($methionine < 2) {
-                return back()->with('error', 'METHIONINE is insufficient to produce Layers Mash');
+            if ($methionine < $cm->methionine) {
+                return back()->with('error', 'METHIONINE is insufficient to produce Broilers Stater');
             }
 
-            $fulzyme = Item::where('id', 19)->first()->qty;
-            if ($fulzyme < 0.5) {
-                return back()->with('error', 'FULZYME is insufficient to produce Layers Mash');
+
+            $lprmix = Item::where('id', 9)->first()->qty;
+            if ($lprmix < $cm->lprmix) {
+                return back()->with('error', "Layer's PREMIX is insufficient to produce Broilers Stater");
+            }
+
+            $fulzyme = Item::where('id', 10)->first()->qty;
+            if ($fulzyme < $cm->fulzyme) {
+                return back()->with('error', 'FULZYME is insufficient to produce Broilers Stater');
             }
 
             $zerotox = Item::where('id', 20)->first()->qty;
-            if ($zerotox < 0.3) {
-                return back()->with('error', 'ZEROTOX is insufficient to produce Layers Mash');
+            if ($zerotox < $cm->zerotox) {
+                return back()->with('error', 'ZEROTOX is insufficient to produce Broilers Stater');
             }
 
-            $lprmix = Item::where('id', 9)->first()->qty;
-            if ($lprmix < 2.5) {
-                return back()->with('error', "LAYER'S PREMIX is insufficient to produce Layers Mash");
+
+            $salt = Item::where('id', 12)->first()->qty;
+            if ($salt < $cm->salt) {
+                return back()->with('error', 'SALT is insufficient to produce Broilers Stater');
             }
+
 
 
 
 
             //Deduction
-            $maize = Item::where('id', 1)->decrement('qty', 580);
-            $soya = Item::where('id', 2)->decrement('qty', 190);
-            $weathofful = Item::where('id', 5)->decrement('qty', 93);
-            $bonemeal = Item::where('id', 3)->decrement('qty', 30);
-            $limestone = Item::where('id', 4)->decrement('qty', 96);
-            $salt = Item::where('id', 12)->decrement('qty', 3);
-            $lysine = Item::where('id', 17)->decrement('qty', 2);
-            $methionine = Item::where('id', 18)->decrement('qty', 2);
-            $fulzyme = Item::where('id', 19)->decrement('qty', 0.5);
-            $zerotox = Item::where('id', 20)->decrement('qty', 0.3);
-            $lprmix = Item::where('id', 9)->decrement('qty', 2.5);
+            $maize = Item::where('id', 1)->decrement('qty', $cm->maize);
+            $soya = Item::where('id', 2)->decrement('qty', $cm->soya);
+            $weathofful = Item::where('id', 5)->decrement('qty', $cm->weathofful);
+            $bonemeal = Item::where('id', 3)->decrement('qty', $cm->bonemeal);
+            $limestone = Item::where('id', 4)->decrement('qty', $cm->limestone);
+            $lysine = Item::where('id', 17)->decrement('qty', $cm->lysine);
+            $methionine = Item::where('id', 18)->decrement('qty', $cm->methionine);
+            $lprmix = Item::where('id', 9)->decrement('qty', $cm->lprmix);
+            $fulzyme = Item::where('id', 19)->decrement('qty', $cm->fulzyme);
+            $zerotox = Item::where('id', 20)->decrement('qty', $cm->zerotox);
+            $salt = Item::where('id', 12)->decrement('qty', $cm->salt);
 
 
-            //history
+
+
+
             $balance = Item::where('id', 1)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 1;
-            $trx->issued_qty = 580;
+            $trx->issued_qty = $cm->maize;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1080,7 +968,7 @@ class ItemController extends Controller
             $balance = Item::where('id', 2)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 2;
-            $trx->issued_qty = 190;
+            $trx->issued_qty = $cm->soya;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1088,7 +976,7 @@ class ItemController extends Controller
             $balance = Item::where('id', 5)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 5;
-            $trx->issued_qty = 93;
+            $trx->issued_qty = $cm->weathofful;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1096,7 +984,7 @@ class ItemController extends Controller
             $balance = Item::where('id', 3)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 3;
-            $trx->issued_qty = 30;
+            $trx->issued_qty = $cm->bonemeal;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1104,7 +992,7 @@ class ItemController extends Controller
             $balance = Item::where('id', 4)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 4;
-            $trx->issued_qty = 96;
+            $trx->issued_qty = $cm->limestone;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1112,7 +1000,7 @@ class ItemController extends Controller
             $balance = Item::where('id', 12)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 12;
-            $trx->issued_qty = 3;
+            $trx->issued_qty = $cm->salt;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1120,7 +1008,7 @@ class ItemController extends Controller
             $balance = Item::where('id', 17)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 17;
-            $trx->issued_qty = 2;
+            $trx->issued_qty = $cm->lysine;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1129,7 +1017,7 @@ class ItemController extends Controller
             $balance = Item::where('id', 18)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 18;
-            $trx->issued_qty = 2;
+            $trx->issued_qty = $cm->methionine;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
@@ -1138,29 +1026,29 @@ class ItemController extends Controller
             $trx = new Transaction();
             $trx->item_id = 19;
             $trx->type = 'debit';
-            $trx->issued_qty = 0.5;
+            $trx->issued_qty = $cm->fulzyme;
             $trx->balance = $balance;
             $trx->save();
 
             $balance = Item::where('id', 20)->first()->qty;
             $trx = new Transaction();
             $trx->item_id = 20;
-            $trx->issued_qty = 0.3;
+            $trx->issued_qty = $cm->zerotox;
             $trx->type = 'debit';
             $trx->balance = $balance;
             $trx->save();
 
             $balance = Item::where('id', 9)->first()->qty;
             $trx = new Transaction();
-            $trx->item_id = 8;
+            $trx->item_id = $cm->lprmix;
             $trx->type = 'debit';
-            $trx->issued_qty = 2.5;
+            $trx->issued_qty = 9;
             $trx->balance = $balance;
             $trx->save();
 
 
 
-            $output = Output::where('id', $final_item)->increment('qty', 1);
+            $output = Output::where('id', $final_item)->increment('qty', 40);
             $balance = Output::where('id', $final_item)->first()->qty;
 
             $trx = new OutputTransaction();
@@ -1172,189 +1060,16 @@ class ItemController extends Controller
 
 
 
-            return back()->with('message', "1 Ton of Layer's Mash Restock successful");
+            return back()->with('message', "40 bags of Broiler's Stater Restock successful");
         }
 
-        if ($final_item == 3 && $ton == 1) {
-
-            //Maize
-            $maize = Item::where('id', 1)->first()->qty;
-            if ($maize < 580) {
-                return back()->with('error', 'MAIZE is insufficient to produce Layers Mash');
-            }
-            $soya = Item::where('id', 2)->first()->qty;
-            if ($soya < 190) {
-                return back()->with('error', 'SOYA is insufficient to produce Layers Mash');
-            }
-
-            $weathofful = Item::where('id', 5)->first()->qty;
-            if ($weathofful < 93) {
-                return back()->with('error', 'WHEATOFFUL is insufficient to produce Layers Mash');
-            }
-
-            $bonemeal = Item::where('id', 3)->first()->qty;
-            if ($bonemeal < 30) {
-                return back()->with('error', 'BONE MEAL is insufficient to produce Layers Mash');
-            }
-
-            $limestone = Item::where('id', 4)->first()->qty;
-            if ($limestone < 96) {
-                return back()->with('error', 'LIME STONE is insufficient to produce Layers Mash');
-            }
-
-            $salt = Item::where('id', 12)->first()->qty;
-            if ($salt < 3) {
-                return back()->with('error', 'SALT is insufficient to produce Layers Mash');
-            }
-
-            $lysine = Item::where('id', 17)->first()->qty;
-            if ($lysine < 2) {
-                return back()->with('error', 'LYSINE is insufficient to produce Layers Mash');
-            }
-
-            $methionine = Item::where('id', 18)->first()->qty;
-            if ($methionine < 2) {
-                return back()->with('error', 'METHIONINE is insufficient to produce Layers Mash');
-            }
-
-            $fulzyme = Item::where('id', 19)->first()->qty;
-            if ($fulzyme < 0.5) {
-                return back()->with('error', 'FULZYME is insufficient to produce Layers Mash');
-            }
-
-            $zerotox = Item::where('id', 20)->first()->qty;
-            if ($zerotox < 0.3) {
-                return back()->with('error', 'ZEROTOX is insufficient to produce Layers Mash');
-            }
-
-            $lprmix = Item::where('id', 9)->first()->qty;
-            if ($lprmix < 2.5) {
-                return back()->with('error', "LAYER'S PREMIX is insufficient to produce Layers Mash");
-            }
 
 
 
 
-            //Deduction
-            $maize = Item::where('id', 1)->decrement('qty', 580);
-            $soya = Item::where('id', 2)->decrement('qty', 190);
-            $weathofful = Item::where('id', 5)->decrement('qty', 93);
-            $bonemeal = Item::where('id', 3)->decrement('qty', 30);
-            $limestone = Item::where('id', 4)->decrement('qty', 96);
-            $salt = Item::where('id', 12)->decrement('qty', 3);
-            $lysine = Item::where('id', 17)->decrement('qty', 2);
-            $methionine = Item::where('id', 18)->decrement('qty', 2);
-            $fulzyme = Item::where('id', 19)->decrement('qty', 0.5);
-            $zerotox = Item::where('id', 20)->decrement('qty', 0.3);
-            $lprmix = Item::where('id', 9)->decrement('qty', 2.5);
-
-
-            //history
-            $balance = Item::where('id', 1)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 1;
-            $trx->issued_qty = 580;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 2)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 2;
-            $trx->issued_qty = 190;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 5)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 5;
-            $trx->issued_qty = 93;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 3)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 3;
-            $trx->issued_qty = 30;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 4)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 4;
-            $trx->issued_qty = 96;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 12)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 12;
-            $trx->issued_qty = 3;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 17)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 17;
-            $trx->issued_qty = 2;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-
-            $balance = Item::where('id', 18)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 18;
-            $trx->issued_qty = 2;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 19)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 19;
-            $trx->type = 'debit';
-            $trx->issued_qty = 0.5;
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 20)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 20;
-            $trx->issued_qty = 0.3;
-            $trx->type = 'debit';
-            $trx->balance = $balance;
-            $trx->save();
-
-            $balance = Item::where('id', 9)->first()->qty;
-            $trx = new Transaction();
-            $trx->item_id = 8;
-            $trx->type = 'debit';
-            $trx->issued_qty = 2.5;
-            $trx->balance = $balance;
-            $trx->save();
 
 
 
-            $output = Output::where('id', $final_item)->increment('qty', 1);
-            $balance = Output::where('id', $final_item)->first()->qty;
-
-            $trx = new OutputTransaction();
-            $trx->item_id = $final_item;
-            $trx->type = 'credit';
-            $trx->issued_qty = 1;
-            $trx->balance = $balance;
-            $trx->save();
-
-
-
-            return back()->with('message', "1 Ton of Layer's Mash Restock successful");
-        }
 
 
 
@@ -1583,9 +1298,22 @@ class ItemController extends Controller
             $formation_title = $formation->title ?? null;
             $formation_note = null;
             $fm_code = "lm1";
- 
+
             return view('formular', compact('formation', 'formation_note', 'fm_code', 'formation_title'));
- 
+
+         }
+
+
+         if($name == 'bs' && $ton == 1 ){
+
+
+            $formation = BsFormation::where('id', 1)->first();
+            $formation_title = $formation->title ?? null;
+            $formation_note = null;
+            $fm_code = "bs1";
+
+            return view('formular', compact('formation', 'formation_note', 'fm_code', 'formation_title'));
+
          }
 
 
@@ -1610,7 +1338,11 @@ class ItemController extends Controller
 	{
 
 
+
         if($request->fm_code == 'gm1'){
+
+
+            dd($request->all());
 
 
             GmFormation::where('id', 1)->update([
@@ -1701,6 +1433,27 @@ class ItemController extends Controller
             ]);
 
             return back()->with('message', 'Chick Mash Formation has been updated');
+        }
+
+        if($request->fm_code == 'bs1'){
+
+
+            BsFormation::where('id', 1)->update([
+
+                'maize' => $request->maize,
+                'soya' => $request->soya,
+                'weathofful' => $request->weathofful,
+                'bonemeal' => $request->bonemeal,
+                'limestone' => $request->limestone,
+                'salt' => $request->salt,
+                'fulzyme' => $request->fulzyme,
+                'zerotox' => $request->zerotox,
+                'lprmix' => $request->lprmix,
+
+
+            ]);
+
+            return back()->with('message', 'Broilers Stater Formation has been updated');
         }
 
 
