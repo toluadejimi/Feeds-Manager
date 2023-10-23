@@ -32,6 +32,17 @@ Route::get('log-out',  [ItemController::class,'logout']);
 
 Route::post('register',  [ItemController::class,'register']);
 
+Route::get('adjust-stock',  [ItemController::class,'adjust_stock']);
+
+
+Route::post('add-to-stock',  [ItemController::class,'add_to_stock']);
+
+
+
+
+
+
+
 
 
 

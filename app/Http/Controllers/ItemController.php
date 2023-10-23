@@ -11,6 +11,7 @@ use App\Models\LmFormation;
 use App\Models\OnetoncmFormations;
 use App\Models\Output;
 use App\Models\OutputTransaction;
+use App\Models\StockAdjust;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,6 +45,41 @@ class ItemController extends Controller
 
         return view('welcome', compact('output', 'user', 'gmesh', 'pl', 'cmesh', 'lmesh', 'bs', 'bf'));
     }
+
+
+
+     public function adjust_stock(Request $request)
+    {
+
+        $user = Auth::user()->role ?? null;
+        $outputs = Output::all();
+        $items = Item::all();
+        $adjusts = StockAdjust::all();
+
+
+
+        return view('adjust-stock', compact('user', 'adjusts', 'outputs', 'items'));
+
+
+    }
+
+
+        public function add_to_stock(Request $request)
+    {
+
+
+        $user = Auth::user()->role ?? null;
+        Output::where('id', $request->id)->increment('qty', $request->quantity);
+
+        return back()->with('message', 'Stock has been adjusted successfully');
+
+
+
+
+
+
+    }
+
 
 
      public function register(Request $request)

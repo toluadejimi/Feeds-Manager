@@ -298,6 +298,8 @@
             <a class="p-2 text-dark" href="/item">Stocks</a>
             <a class="p-2 text-dark" href="/history">History</a>
             <a class="p-2 text-dark" href="/formula">Formular</a>
+            <a class="p-2 text-dark" href="/adjust-stock">Adjust Stock</a>
+
             @endif
         </nav>
 
