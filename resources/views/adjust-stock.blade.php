@@ -354,6 +354,8 @@
                                 <ion-icon name="person-add-outline"></ion-icon> Add to Stock
                             </button>
 
+                            
+
                         </td>
 
 
